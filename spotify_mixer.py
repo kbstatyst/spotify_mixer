@@ -2,6 +2,8 @@ import streamlit as st
 import requests
 import base64
 import json
+import pandas
+import statistics
 
 CLIENT_ID = ''
 CLIENT_SECRET = ''
@@ -11,7 +13,6 @@ API_URL = 'https://api.spotify.com/v1'
 
 PLAYLISTS_URL = API_URL + '/playlists'
 FEATURES_URL = API_URL + '/audio-features'
-st.write(PLAYLISTS_URL)
 
 LABELS = {'playlist_name': 'Nazwa playlisty:',
           'playlist_owner': 'Właściciel playlisty',
@@ -68,26 +69,69 @@ def get_ids_from_playlist(playlist):
         ids.append(track['track']['id'])
     return '%2C'.join(ids)
 
+def show_audio_features_info(audio_features):
+    st.caption('Średnie danceability')
+    st.text(statistics.mean(map((lambda t: t['danceability']), audio_features['audio_features'])))
+    st.caption('Średnie energy')
+    st.text(statistics.mean(map((lambda t: t['energy']), audio_features['audio_features'])))
+    st.caption('Średnie acousticness')
+    st.text(statistics.mean(map((lambda t: t['acousticness']), audio_features['audio_features'])))
+    st.caption('Średnie instrumentalness')
+    st.text(statistics.mean(map((lambda t: t['instrumentalness']), audio_features['audio_features'])))
+    st.caption('Średnie liveness')
+    st.text(statistics.mean(map((lambda t: t['liveness']), audio_features['audio_features'])))
+    st.caption('Średnie valence (szczęśliwość)')
+    st.text(statistics.mean(map((lambda t: t['valence']), audio_features['audio_features'])))
+
 def show_playlist_info(playlist):
     st.caption(LABELS['playlist_name'])
     st.text(playlist['name'])
-    st.caption(LABELS['playlist_owner'])
-    st.text(playlist['owner']['display_name'])
+    # st.caption(LABELS['playlist_owner'])
+    # st.text(playlist['owner']['display_name'])
     st.caption(LABELS['playlist_lenght'])
     st.text(len(playlist['tracks']['items']))
 
 pl_id = st.text_input("Input playlist id", value=playlist_id)
 
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    pl1 = st.button("Playlista wbudowana 1")
+
+with col2:
+    pl2 = st.button("Playlista wbudowana 2")
+
+with col3:
+    pl3 = st.button("Playlista wbudowana 3")
+
+with col4:
+    pl4 = st.button("Playlista wbudowana 3")
+
+if pl1:
+    playlist_id = '' # playlista 1
+elif pl2:
+    playlist_id = '' # playlista 2
+elif pl3:
+    playlist_id = '' # playlista 3
+elif pl4:
+    playlist_id = '' # playlista 4
+
 access_token = get_access_token(CLIENT_ID, CLIENT_SECRET)
 
 if access_token:
-    playlist = get_playlist(access_token, pl_id)
+    playlist = get_playlist(access_token, playlist_id)
     if playlist:
         # songs = get_songs_from_playlist(playlist)
         show_playlist_info(playlist)
-        songs_ids = get_ids_from_playlist(playlist)
-        audio_features = get_audio_features(access_token, songs_ids)
-        st.write(audio_features)
+        for (n, i) in enumerate(playlist['tracks']['items']):
+            st.write(str(n + 1) + '. ' + i['track']['artists'][0]['name'] + ' : ' + i['track']['name'])
+
+        stats = st.button('Statystyki')
+        if stats:
+            songs_ids = get_ids_from_playlist(playlist)
+            audio_features = get_audio_features(access_token, songs_ids)
+            show_audio_features_info(audio_features)
+        # st.write(audio_features)
 
         # st.write(songs)
     else:
