@@ -73,21 +73,24 @@ def show_audio_features_info(audio_features):
                      'żywość': 'liveness',
                      'szczęśliwość': 'valence'}
 
-    keys = list(feature_names.keys())
-    row1 = keys[0:3]
-    row2 = keys[3:6]
+    expander = st.expander('Statystyki')
 
-    columns1 = st.columns(3)
-    columns2 = st.columns(3)
+    with expander:
+        keys = list(feature_names.keys())
+        row1 = keys[0:3]
+        row2 = keys[3:6]
 
-    def mean(name):
-        return statistics.mean(map((lambda t: t[feature_names[name]]), audio_features['audio_features']))
+        columns1 = st.columns(3)
+        columns2 = st.columns(3)
 
-    for (name, column) in zip(row1, columns1):
-        column.metric(name, mean(name))
+        def mean(name):
+            return statistics.mean(map((lambda t: t[feature_names[name]]), audio_features['audio_features']))
 
-    for (name, column) in zip(row2, columns2):
-        column.metric(name, mean(name))
+        for (name, column) in zip(row1, columns1):
+            column.metric(name, mean(name))
+
+        for (name, column) in zip(row2, columns2):
+            column.metric(name, mean(name))
 
 def songs_to_dataframe(songs):
     # df = pd.DataFrame(np.random.randn(10, 5), columns=("col %d" % i for i in range(5)))
@@ -96,7 +99,10 @@ def songs_to_dataframe(songs):
         songs_info.append({'Artysta': s['track']['artists'][0]['name'], 'Tytuł': s['track']['name']})
 
     df = pd.DataFrame(songs_info)
-    st.table(df)
+
+    expander = st.expander('Lista piosenek', expanded=True)
+    with expander:
+        st.table(df)
 
 st.header("Spotify mixer")
 st.caption("Playlisty")
@@ -104,16 +110,16 @@ st.caption("Playlisty")
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    pl1 = st.button("Piosenki do płakania", use_container_width=True)
+    pl1 = st.button(":minidisc: Piosenki do płakania", use_container_width=True)
 
 with col2:
-    pl2 = st.button("Piosenki do tańczenia", use_container_width=True)
+    pl2 = st.button(":minidisc: Piosenki do tańczenia", use_container_width=True)
 
 with col3:
-    pl3 = st.button("Spokojny jazz", use_container_width=True)
+    pl3 = st.button(":minidisc: Spokojny jazz", use_container_width=True)
 
 with col4:
-    pl4 = st.button("Szybki jogging", use_container_width=True)
+    pl4 = st.button(":minidisc: Szybki jogging", use_container_width=True)
 
 if pl1:
     st.session_state['playlist_id'] = '37i9dQZF1EIdChYeHNDfK5'
@@ -126,16 +132,16 @@ elif pl4:
 
 access_token = get_access_token(CLIENT_ID, CLIENT_SECRET)
 
+with st.sidebar:
+    st.button(":house: Strona główna", use_container_width=True)
+    st.button(":heavy_plus_sign: Nowa playlista", use_container_width=True)
+
 if access_token and st.session_state['playlist_id']:
     playlist = get_playlist(access_token, st.session_state['playlist_id'])
     if playlist:
-
-        stats = st.button('Statystyki')
-        if stats:
-            songs_ids = get_ids_from_playlist(playlist)
-            audio_features = get_audio_features(access_token, songs_ids)
-            show_audio_features_info(audio_features)
-
+        songs_ids = get_ids_from_playlist(playlist)
+        audio_features = get_audio_features(access_token, songs_ids)
+        show_audio_features_info(audio_features)
         songs_to_dataframe(playlist['tracks']['items'])
     else:
         print("No playlists found.")
