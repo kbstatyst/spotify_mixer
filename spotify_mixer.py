@@ -5,9 +5,10 @@ import json
 import pandas
 import statistics
 import pandas as pd
+import uuid
 
-CLIENT_ID = ''
-CLIENT_SECRET = ''
+CLIENT_ID = '52b35c378f1f48e691bf39d4b004a5b3'
+CLIENT_SECRET = '31993222478349968efa385c178f78e6'
 
 TOKEN_URL = 'https://accounts.spotify.com/api/token'
 API_URL = 'https://api.spotify.com/v1'
@@ -17,6 +18,15 @@ FEATURES_URL = API_URL + '/audio-features'
 
 if 'playlist_id' not in st.session_state:
     st.session_state['playlist_id'] = ''
+
+if 'page' not in st.session_state:
+    st.session_state['page'] = 'mainpage'
+
+if 'custom_playlists' not in st.session_state:
+    st.session_state['custom_playlists'] = []
+
+if 'playlist_to_show' not in st.session_state:
+    st.session_state['playlist_to_show'] = []
 
 def get_access_token(client_id, client_secret):
     client_credentials = f"{CLIENT_ID}:{CLIENT_SECRET}"
@@ -42,28 +52,38 @@ def get_playlist(access_token, playlist_id):
     }
 
     response = requests.get(f"{PLAYLISTS_URL}/{playlist_id}" , headers=headers)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        print("Failed to retrieve playlists.")
-        return None
+    responseJson = response.json()
+    next = responseJson['tracks']['next']
+
+    while next:
+
+        responseNext = requests.get(next , headers=headers)
+
+        responseJson['tracks']['items'].extend(responseNext.json()['items'])
+        next = responseNext.json()['next']
+
+    return responseJson
+
 
 def get_audio_features(access_token, songs_ids):
     headers = {
         'Authorization': f'Bearer {access_token}',
     }
-    response = requests.get(f"{FEATURES_URL}/?ids={songs_ids}" , headers=headers)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        print("Failed to retrieve audio features.")
-        return None
+    features = {'audio_features': []}
+
+    for i in range(0, len(songs_ids), 100):
+        chunk = songs_ids[i:i + 100]
+        chunk_url = '%2C'.join(chunk)
+        response = requests.get(f"{FEATURES_URL}/?ids={chunk_url}" , headers=headers)
+        features['audio_features'].extend(response.json()['audio_features'])
+
+    return features
 
 def get_ids_from_playlist(playlist):
     ids = []
     for track in playlist['tracks']['items']:
         ids.append(track['track']['id'])
-    return '%2C'.join(ids)
+    return ids
 
 def show_audio_features_info(audio_features):
     feature_names = {'taneczność': 'danceability',
@@ -92,6 +112,33 @@ def show_audio_features_info(audio_features):
         for (name, column) in zip(row2, columns2):
             column.metric(name, mean(name))
 
+def show_audio_features_info_custom(audio_features):
+    feature_names = {'taneczność': 'danceability',
+                     'energiczność': 'energy',
+                     'akustyczność': 'acousticness',
+                     'instrumentalność': 'instrumentalness',
+                     'żywość': 'liveness',
+                     'szczęśliwość': 'valence'}
+
+    expander = st.expander('Statystyki')
+
+    with expander:
+        keys = list(feature_names.keys())
+        row1 = keys[0:3]
+        row2 = keys[3:6]
+
+        columns1 = st.columns(3)
+        columns2 = st.columns(3)
+
+        def mean(name):
+            return statistics.mean(map((lambda t: t['features'][feature_names[name]]), audio_features))
+
+        for (name, column) in zip(row1, columns1):
+            column.metric(name, mean(name))
+
+        for (name, column) in zip(row2, columns2):
+            column.metric(name, mean(name))
+
 def songs_to_dataframe(songs):
     # df = pd.DataFrame(np.random.randn(10, 5), columns=("col %d" % i for i in range(5)))
     songs_info = []
@@ -105,45 +152,143 @@ def songs_to_dataframe(songs):
         st.table(df)
 
 st.header("Spotify mixer")
-st.caption("Playlisty")
 
-col1, col2, col3, col4 = st.columns(4)
+def show_custom_playlist(songs):
+    st.session_state['playlist_to_show'] = songs['playlist']
 
-with col1:
-    pl1 = st.button(":minidisc: Piosenki do płakania", use_container_width=True)
+def mainpage():
+    st.caption("Playlisty")
 
-with col2:
-    pl2 = st.button(":minidisc: Piosenki do tańczenia", use_container_width=True)
+    # st.markdown('<style>p::first-letter{font-size: 4rem;}</style>', unsafe_allow_html=True)
 
-with col3:
-    pl3 = st.button(":minidisc: Spokojny jazz", use_container_width=True)
+    col1, col2, col3, col4 = st.columns(4)
 
-with col4:
-    pl4 = st.button(":minidisc: Szybki jogging", use_container_width=True)
+    with col1:
+        pl1 = st.button(':minidisc: Piosenki do płakania', use_container_width=True)
 
-if pl1:
-    st.session_state['playlist_id'] = '37i9dQZF1EIdChYeHNDfK5'
-elif pl2:
-    st.session_state['playlist_id'] = '7qZcphQz8AJd7V4CmUI4dA'
-elif pl3:
-    st.session_state['playlist_id'] = '6c8RcZLx8DGlPdq7XLVr9g'
-elif pl4:
-    st.session_state['playlist_id'] = '0zFDgi3VsLZUHH9NerfQ8t'
+    with col2:
+        pl2 = st.button(":minidisc: Piosenki do tańczenia", use_container_width=True)
 
-access_token = get_access_token(CLIENT_ID, CLIENT_SECRET)
+    with col3:
+        pl3 = st.button(":minidisc: Spokojny jazz", use_container_width=True)
+
+    with col4:
+        pl4 = st.button(":minidisc: Szybki jogging", use_container_width=True)
+
+    if pl1:
+        st.session_state['playlist_id'] = '37i9dQZF1EIdChYeHNDfK5'
+    elif pl2:
+        st.session_state['playlist_id'] = '7qZcphQz8AJd7V4CmUI4dA'
+    elif pl3:
+        st.session_state['playlist_id'] = '6c8RcZLx8DGlPdq7XLVr9g'
+    elif pl4:
+        st.session_state['playlist_id'] = '0zFDgi3VsLZUHH9NerfQ8t'
+
+    custom_playlists = st.session_state['custom_playlists']
+
+    for i in range(0, len(custom_playlists), 4):
+        chunk = custom_playlists[i:i + 4]
+        col1, col2, col3, col4 = st.columns(4)
+        try:
+            col1.button(":dvd: " + chunk[0]['name'], key=uuid.uuid1(), use_container_width=True, on_click=show_custom_playlist, args=(chunk[0],))
+            col2.button(":dvd: " + chunk[1]['name'], key=uuid.uuid1(), use_container_width=True, on_click=show_custom_playlist, args=(chunk[1],))
+            col3.button(":dvd: " + chunk[2]['name'], key=uuid.uuid1(), use_container_width=True, on_click=show_custom_playlist, args=(chunk[2],))
+            col4.button(":dvd: " + chunk[3]['name'], key=uuid.uuid1(), use_container_width=True, on_click=show_custom_playlist, args=(chunk[3],))
+        except IndexError:
+            break
+
+    if st.session_state['playlist_id']:
+        access_token = get_access_token(CLIENT_ID, CLIENT_SECRET)
+        if access_token:
+            playlist = get_playlist(access_token, st.session_state['playlist_id'])
+            if playlist:
+                songs_ids = get_ids_from_playlist(playlist)
+                audio_features = get_audio_features(access_token, songs_ids)
+                show_audio_features_info(audio_features)
+                songs_to_dataframe(playlist['tracks']['items'])
+            else:
+                print("No playlists found.")
+    elif st.session_state['playlist_to_show']:
+        show_audio_features_info_custom(st.session_state['playlist_to_show'])
+        songs_to_dataframe(st.session_state['playlist_to_show'])
+
+
+def new_playlist():
+    st.caption("Nowa playlista")
+
+    dnc = st.slider('taneczność', min_value=0.0, max_value=1.0, value=(0.0, 1.0))
+    eng = st.slider('energiczność', min_value=0.0, max_value=1.0, value=(0.0, 1.0))
+    acu = st.slider('akustyczność', min_value=0.0, max_value=1.0, value=(0.0, 1.0))
+    ins = st.slider('instrumentalność', min_value=0.0, max_value=1.0, value=(0.0, 1.0))
+    liv = st.slider('żywość', min_value=0.0, max_value=1.0, value=(0.0, 1.0))
+    val = st.slider('szczęśliwość', min_value=0.0, max_value=1.0, value=(0.0, 1.0))
+
+    big_playlist_id = '2Jc0amXy2IvLyTofJKgiYg'
+
+    btn = st.button(":minidisc: Utwórz", use_container_width=True)
+
+    def zip_tracks_features(tracks, features):
+        zipped = zip(tracks, features)
+        track_with_features = []
+        for pair in zipped:
+            pair[0]['features'] = pair[1]
+            track_with_features.append(pair[0])
+        return track_with_features
+
+    def filter_features(track):
+        features = track['features']
+        conditions = [ dnc[0] <= features['danceability'] <= dnc[1],
+                       eng[0] <= features['energy'] <= eng[1],
+                       acu[0] <= features['acousticness'] <= acu[1],
+                       ins[0] <= features['instrumentalness'] <= ins[1],
+                       liv[0] <= features['liveness'] <= liv[1],
+                       val[0] <= features['valence'] <= val[1] ]
+        return all(conditions)
+
+    def filter_tracks(tracks):
+        fil = filter(filter_features, tracks)
+        return list(fil)
+
+    def lengths(all, filtered):
+        expander = st.expander('Liczba utworów', expanded=True)
+        with expander:
+            columns = st.columns(2)
+            columns[0].metric('Wszyskie', all)
+            columns[1].metric('Spełniające warunki', filtered)
+
+    if btn:
+        access_token = get_access_token(CLIENT_ID, CLIENT_SECRET)
+        if access_token:
+            playlist = get_playlist(access_token, big_playlist_id)
+            if playlist:
+                songs_ids = get_ids_from_playlist(playlist)
+                audio_features = get_audio_features(access_token, songs_ids)
+                zipped = zip_tracks_features(playlist['tracks']['items'],
+                                             audio_features['audio_features'])
+                filtered = filter_tracks(zipped)
+                lengths(len(zipped), len(filtered))
+
+                songs_to_dataframe(filtered)
+
+                def save_custom_playlist():
+                    st.session_state['custom_playlists'].append({'name': st.session_state['new_name'], 'playlist': filtered[:]})
+                    st.success('Playlista zapisana')
+
+                name = st.text_input('Nazwa', value='Nowa playlista', key='new_name', on_change=save_custom_playlist)
+
+                # st.button(':arrow_down: Zapisz', on_click=save_custom_playlist, args=(st.session_state['new_name'], filtered), use_container_width=True)
+
+def go_to_mainpage():
+    st.session_state['page'] = 'mainpage'
+
+def go_to_new_playlist():
+    st.session_state['page'] = 'new_playlist'
 
 with st.sidebar:
-    st.button(":house: Strona główna", use_container_width=True)
-    st.button(":heavy_plus_sign: Nowa playlista", use_container_width=True)
+    st.button(":house: Strona główna", use_container_width=True, on_click=go_to_mainpage)
+    st.button(":heavy_plus_sign: Nowa playlista", use_container_width=True, on_click=go_to_new_playlist)
 
-if access_token and st.session_state['playlist_id']:
-    playlist = get_playlist(access_token, st.session_state['playlist_id'])
-    if playlist:
-        songs_ids = get_ids_from_playlist(playlist)
-        audio_features = get_audio_features(access_token, songs_ids)
-        show_audio_features_info(audio_features)
-        songs_to_dataframe(playlist['tracks']['items'])
-    else:
-        print("No playlists found.")
-
-# if __name__ == "__main__":
+if st.session_state.page == 'mainpage':
+    mainpage()
+elif st.session_state.page == 'new_playlist':
+    new_playlist()
