@@ -1,3 +1,12 @@
+"""
+This example module shows various types of documentation available for use
+with pydoc.  To generate HTML documentation for this module issue the
+command:
+
+        pydoc -w foo
+
+"""
+
 import streamlit as st
 import requests
 import base64
@@ -29,6 +38,13 @@ if 'playlist_to_show' not in st.session_state:
     st.session_state['playlist_to_show'] = []
 
 def get_access_token(client_id, client_secret):
+    """
+    Pobiera token sesji API spotify
+
+    :param client_id: client id aplikacji
+    :param client_secret: sekret aplikacji
+    """
+
     client_credentials = f"{CLIENT_ID}:{CLIENT_SECRET}"
     encoded_client_credentials = base64.b64encode(client_credentials.encode()).decode()
 
@@ -47,6 +63,12 @@ def get_access_token(client_id, client_secret):
         return None
 
 def get_playlist(access_token, playlist_id):
+    """
+    Pobiera playlisty wg API spotify: link https://developer.spotify.com/documentation/web-api/reference/get-playlist
+
+    :param access_token: token sesji
+    :param playlist_id: id playlisty
+    """
     headers = {
         'Authorization': f'Bearer {access_token}',
     }
@@ -66,6 +88,13 @@ def get_playlist(access_token, playlist_id):
 
 
 def get_audio_features(access_token, songs_ids):
+    """
+    Pobiera własności utworów wg API spotify: https://developer.spotify.com/documentation/web-api/reference/get-several-audio-features
+
+    :param access_token: token sesji
+    :param songs_ids: lista id utworów
+    :return: lista właściwości utworów
+    """
     headers = {
         'Authorization': f'Bearer {access_token}',
     }
@@ -86,6 +115,13 @@ def get_ids_from_playlist(playlist):
     return ids
 
 def show_audio_features_info(audio_features):
+    """
+    Wyświetlenie średnich właściwości utworów na ekranie
+
+    :param audio_features: lista właściwości utworów
+    :return: None
+    """
+
     feature_names = {'taneczność': 'danceability',
                      'energiczność': 'energy',
                      'akustyczność': 'acousticness',
@@ -140,6 +176,13 @@ def show_audio_features_info_custom(audio_features):
             column.metric(name, mean(name))
 
 def songs_to_dataframe(songs):
+    """
+    Przekształcenie listy piosenek do dataframe'u biblioteki pandas.
+    Potrzebne do wyświetlenia listy piosenek na ekranie w estetyczny sposób.
+
+    :param songs: lista piosenek z api spotify
+    :return: lista piosenek w dataframe'ie pandas
+    """
     # df = pd.DataFrame(np.random.randn(10, 5), columns=("col %d" % i for i in range(5)))
     songs_info = []
     for s in songs:
@@ -157,6 +200,9 @@ def show_custom_playlist(songs):
     st.session_state['playlist_to_show'] = songs['playlist']
 
 def mainpage():
+    """
+    Wyświeltenie strony głównej
+    """
     st.caption("Playlisty")
 
     # st.markdown('<style>p::first-letter{font-size: 4rem;}</style>', unsafe_allow_html=True)
@@ -214,6 +260,9 @@ def mainpage():
 
 
 def new_playlist():
+    """
+    Wyświeltenie strony tworzenia nowej playlisty
+    """
     st.caption("Nowa playlista")
 
     dnc = st.slider('taneczność', min_value=0.0, max_value=1.0, value=(0.0, 1.0))
@@ -284,11 +333,13 @@ def go_to_mainpage():
 def go_to_new_playlist():
     st.session_state['page'] = 'new_playlist'
 
-with st.sidebar:
-    st.button(":house: Strona główna", use_container_width=True, on_click=go_to_mainpage)
-    st.button(":heavy_plus_sign: Nowa playlista", use_container_width=True, on_click=go_to_new_playlist)
+if __name__ == "__main__":
 
-if st.session_state.page == 'mainpage':
-    mainpage()
-elif st.session_state.page == 'new_playlist':
-    new_playlist()
+    with st.sidebar:
+        st.button(":house: Strona główna", use_container_width=True, on_click=go_to_mainpage)
+        st.button(":heavy_plus_sign: Nowa playlista", use_container_width=True, on_click=go_to_new_playlist)
+
+    if st.session_state.page == 'mainpage':
+        mainpage()
+    elif st.session_state.page == 'new_playlist':
+        new_playlist()

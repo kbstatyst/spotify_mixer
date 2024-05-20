@@ -1,0 +1,38 @@
+.. spotify_mixer documentation master file, created by
+   sphinx-quickstart on Mon May 20 11:48:22 2024.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to spotify_mixer's documentation!
+=========================================
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+.. autosummary::
+   :toctree: generated
+
+   spotify_mixer
+
+.. autofunction:: spotify_mixer.get_access_token
+
+.. autofunction:: spotify_mixer.get_playlist
+
+.. autofunction:: spotify_mixer.get_audio_features
+
+.. autofunction:: spotify_mixer.show_audio_features_info
+
+.. autofunction:: spotify_mixer.songs_to_dataframe
+
+.. autofunction:: spotify_mixer.mainpage
+
+.. autofunction:: spotify_mixer.new_playlist
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

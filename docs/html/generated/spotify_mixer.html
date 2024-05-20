@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html lang="pl" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>spotify_mixer &#8212; spotify_mixer  - dokumentacja</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
+    <script src="../_static/documentation_options.js?v=9893e7ba"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/translations.js?v=a186e9ce"></script>
+    <link rel="index" title="Indeks" href="../genindex.html" />
+    <link rel="search" title="Szukaj" href="../search.html" />
+    <link rel="prev" title="Welcome to spotify_mixer’s documentation!" href="../index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-spotify_mixer">
+<span id="spotify-mixer"></span><h1>spotify_mixer<a class="headerlink" href="#module-spotify_mixer" title="Link to this heading">¶</a></h1>
+<p>This example module shows various types of documentation available for use
+with pydoc.  To generate HTML documentation for this module issue the
+command:</p>
+<blockquote>
+<div><p>pydoc -w foo</p>
+</div></blockquote>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../index.html#spotify_mixer.get_access_token" title="spotify_mixer.get_access_token"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_access_token</span></code></a>(client_id, client_secret)</p></td>
+<td><p>Pobiera token sesji API spotify</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../index.html#spotify_mixer.get_audio_features" title="spotify_mixer.get_audio_features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_audio_features</span></code></a>(access_token, songs_ids)</p></td>
+<td><p>Pobiera własności utworów wg API spotify: <a class="reference external" href="https://developer.spotify.com/documentation/web-api/reference/get-several-audio-features">https://developer.spotify.com/documentation/web-api/reference/get-several-audio-features</a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_ids_from_playlist</span></code>(playlist)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../index.html#spotify_mixer.get_playlist" title="spotify_mixer.get_playlist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_playlist</span></code></a>(access_token, playlist_id)</p></td>
+<td><p>Pobiera playlisty wg API spotify: link <a class="reference external" href="https://developer.spotify.com/documentation/web-api/reference/get-playlist">https://developer.spotify.com/documentation/web-api/reference/get-playlist</a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">go_to_mainpage</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">go_to_new_playlist</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mainpage</span></code>()</p></td>
+<td><p>Wyświeltenie strony głównej</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">new_playlist</span></code>()</p></td>
+<td><p>Wyświeltenie strony tworzenia nowej playlisty</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">show_audio_features_info</span></code>(audio_features)</p></td>
+<td><p>Wyświetlenie średnich właściwości utworów na ekranie</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">show_audio_features_info_custom</span></code>(audio_features)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">show_custom_playlist</span></code>(songs)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">songs_to_dataframe</span></code>(songs)</p></td>
+<td><p>Przekształcenie listy piosenek do dataframe'u biblioteki pandas.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">spotify_mixer</a></h1>
+
+
+
+
+
+
+
+
+<h3>Nawigacja</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">spotify_mixer</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../index.html" title="poprzedni rozdział">Welcome to spotify_mixer’s documentation!</a></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Szybkie wyszukiwanie</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Szukaj" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Katarzyna Białoch.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="../_sources/generated/spotify_mixer.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

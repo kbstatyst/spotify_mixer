@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<html lang="pl" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Welcome to spotify_mixer’s documentation! &#8212; spotify_mixer  - dokumentacja</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=9893e7ba"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/translations.js?v=a186e9ce"></script>
+    <link rel="index" title="Indeks" href="genindex.html" />
+    <link rel="search" title="Szukaj" href="search.html" />
+    <link rel="next" title="spotify_mixer" href="generated/spotify_mixer.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="welcome-to-spotify-mixer-s-documentation">
+<h1>Welcome to spotify_mixer’s documentation!<a class="headerlink" href="#welcome-to-spotify-mixer-s-documentation" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/spotify_mixer.html#module-spotify_mixer" title="spotify_mixer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spotify_mixer</span></code></a></p></td>
+<td><p>This example module shows various types of documentation available for use with pydoc.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="spotify_mixer.get_access_token">
+<span class="sig-prename descclassname"><span class="pre">spotify_mixer.</span></span><span class="sig-name descname"><span class="pre">get_access_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_secret</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spotify_mixer.get_access_token" title="Link to this definition">¶</a></dt>
+<dd><p>Pobiera token sesji API spotify</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>client_id</strong> – client id aplikacji</p></li>
+<li><p><strong>client_secret</strong> – sekret aplikacji</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="spotify_mixer.get_playlist">
+<span class="sig-prename descclassname"><span class="pre">spotify_mixer.</span></span><span class="sig-name descname"><span class="pre">get_playlist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_token</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spotify_mixer.get_playlist" title="Link to this definition">¶</a></dt>
+<dd><p>Pobiera playlisty wg API spotify: link <a class="reference external" href="https://developer.spotify.com/documentation/web-api/reference/get-playlist">https://developer.spotify.com/documentation/web-api/reference/get-playlist</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>access_token</strong> – token sesji</p></li>
+<li><p><strong>playlist_id</strong> – id playlisty</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="spotify_mixer.get_audio_features">
+<span class="sig-prename descclassname"><span class="pre">spotify_mixer.</span></span><span class="sig-name descname"><span class="pre">get_audio_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_token</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">songs_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spotify_mixer.get_audio_features" title="Link to this definition">¶</a></dt>
+<dd><p>Pobiera własności utworów wg API spotify: <a class="reference external" href="https://developer.spotify.com/documentation/web-api/reference/get-several-audio-features">https://developer.spotify.com/documentation/web-api/reference/get-several-audio-features</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>access_token</strong> – token sesji</p></li>
+<li><p><strong>songs_ids</strong> – lista id utworów</p></li>
+</ul>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>lista właściwości utworów</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="spotify_mixer.show_audio_features_info">
+<span class="sig-prename descclassname"><span class="pre">spotify_mixer.</span></span><span class="sig-name descname"><span class="pre">show_audio_features_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">audio_features</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spotify_mixer.show_audio_features_info" title="Link to this definition">¶</a></dt>
+<dd><p>Wyświetlenie średnich właściwości utworów na ekranie</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>audio_features</strong> – lista właściwości utworów</p>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="spotify_mixer.songs_to_dataframe">
+<span class="sig-prename descclassname"><span class="pre">spotify_mixer.</span></span><span class="sig-name descname"><span class="pre">songs_to_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">songs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spotify_mixer.songs_to_dataframe" title="Link to this definition">¶</a></dt>
+<dd><p>Przekształcenie listy piosenek do dataframe’u biblioteki pandas.
+Potrzebne do wyświetlenia listy piosenek na ekranie w estetyczny sposób.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>songs</strong> – lista piosenek z api spotify</p>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>lista piosenek w dataframe’ie pandas</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="spotify_mixer.mainpage">
+<span class="sig-prename descclassname"><span class="pre">spotify_mixer.</span></span><span class="sig-name descname"><span class="pre">mainpage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spotify_mixer.mainpage" title="Link to this definition">¶</a></dt>
+<dd><p>Wyświeltenie strony głównej</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="spotify_mixer.new_playlist">
+<span class="sig-prename descclassname"><span class="pre">spotify_mixer.</span></span><span class="sig-name descname"><span class="pre">new_playlist</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spotify_mixer.new_playlist" title="Link to this definition">¶</a></dt>
+<dd><p>Wyświeltenie strony tworzenia nowej playlisty</p>
+</dd></dl>
+
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Indeks</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Indeks modułów</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Wyszukiwanie</span></a></p></li>
+</ul>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">spotify_mixer</a></h1>
+
+
+
+
+
+
+
+
+<h3>Nawigacja</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="generated/spotify_mixer.html">spotify_mixer</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="generated/spotify_mixer.html" title="następny rozdział">spotify_mixer</a></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Szybkie wyszukiwanie</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Szukaj" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Katarzyna Białoch.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

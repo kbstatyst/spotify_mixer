@@ -1,0 +1,40 @@
+﻿spotify\_mixer
+==============
+
+.. automodule:: spotify_mixer
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      get_access_token
+      get_audio_features
+      get_ids_from_playlist
+      get_playlist
+      go_to_mainpage
+      go_to_new_playlist
+      mainpage
+      new_playlist
+      show_audio_features_info
+      show_audio_features_info_custom
+      show_custom_playlist
+      songs_to_dataframe
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
