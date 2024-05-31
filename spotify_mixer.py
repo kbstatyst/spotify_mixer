@@ -183,12 +183,15 @@ def songs_to_dataframe(songs):
     :param songs: lista piosenek z api spotify
     :return: lista piosenek w dataframe'ie pandas
     """
-    # df = pd.DataFrame(np.random.randn(10, 5), columns=("col %d" % i for i in range(5)))
     songs_info = []
     for s in songs:
-        songs_info.append({'Artysta': s['track']['artists'][0]['name'], 'Tytuł': s['track']['name']})
+        songs_info.append({'Artysta': s['track']['artists'][0]['name']
+                         , 'Tytuł': s['track']['name']
+                         , 'Link': 'https://open.spotify.com/track/' + s['track']['id']})
 
     df = pd.DataFrame(songs_info)
+
+    st.markdown(df.to_html(render_links=True),unsafe_allow_html=True)
 
     expander = st.expander('Lista piosenek', expanded=True)
     with expander:
