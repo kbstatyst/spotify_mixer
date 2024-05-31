@@ -148,6 +148,14 @@ def show_audio_features_info(audio_features):
         for (name, column) in zip(row2, columns2):
             column.metric(name, mean(name))
 
+        stats = []
+        for key in keys:
+            stats.append({'statystyka': key,
+                          'wartość': mean(key)})
+        pd.DataFrame(stats)
+        st.bar_chart(stats, x='statystyka', y='wartość')
+
+
 def show_audio_features_info_custom(audio_features):
     feature_names = {'taneczność': 'danceability',
                      'energiczność': 'energy',
@@ -187,15 +195,13 @@ def songs_to_dataframe(songs):
     for s in songs:
         songs_info.append({'Artysta': s['track']['artists'][0]['name']
                          , 'Tytuł': s['track']['name']
-                         , 'Link': 'https://open.spotify.com/track/' + s['track']['id']})
+                         , 'Odtwórz': '<a href="https://open.spotify.com/track/' + s['track']['id'] + '"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQu_b8IVLbSnfcJpRR1_klGnu00kfHCTitebQ&s" style="width: 20px"></img></a>'})
 
     df = pd.DataFrame(songs_info)
 
-    st.markdown(df.to_html(render_links=True),unsafe_allow_html=True)
-
     expander = st.expander('Lista piosenek', expanded=True)
     with expander:
-        st.table(df)
+        st.markdown(df.to_html(escape=False), unsafe_allow_html=True)
 
 st.header("Spotify mixer")
 
