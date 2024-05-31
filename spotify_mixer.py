@@ -148,14 +148,6 @@ def show_audio_features_info(audio_features):
         for (name, column) in zip(row2, columns2):
             column.metric(name, mean(name))
 
-        stats = []
-        for key in keys:
-            stats.append({'statystyka': key,
-                          'wartość': mean(key)})
-        pd.DataFrame(stats)
-        st.bar_chart(stats, x='statystyka', y='wartość')
-
-
 def show_audio_features_info_custom(audio_features):
     feature_names = {'taneczność': 'danceability',
                      'energiczność': 'energy',
