@@ -304,19 +304,19 @@ def mainpage():
 
     # kolumny z przyciskami z wbudowanymi playlistami
     with col1:
-        col1.image('https://cdn-icons-png.flaticon.com/512/636/636224.png')
+        col1.image('./playlist.png')
         pl1 = st.button('Piosenki do płakania', use_container_width=True)
 
     with col2:
-        col2.image('https://cdn-icons-png.flaticon.com/512/636/636224.png')
+        col2.image('./playlist.png')
         pl2 = st.button("Piosenki do tańczenia", use_container_width=True)
 
     with col3:
-        col3.image('https://cdn-icons-png.flaticon.com/512/636/636224.png')
+        col3.image('./playlist.png')
         pl3 = st.button("Spokojny jazz", use_container_width=True)
 
     with col4:
-        col4.image('https://cdn-icons-png.flaticon.com/512/636/636224.png')
+        col4.image('./playlist.png')
         pl4 = st.button("Szybki jogging", use_container_width=True)
 
     if pl1:
@@ -335,15 +335,14 @@ def mainpage():
         chunk = custom_playlists[i:i + 4]
         col1, col2, col3, col4 = st.columns(4)
         try:
-            col1.image('https://cdn-icons-png.flaticon.com/512/636/636224.png')
+            col1.image('./playlist.png')
             col1.button(chunk[0]['name'], key=uuid.uuid1(), use_container_width=True, on_click=show_custom_playlist, args=(chunk[0],))
-            col2.image('https://cdn-icons-png.flaticon.com/512/636/636224.png')
-            col2.button(":dvd: " + chunk[1]['name'], key=uuid.uuid1(), use_container_width=True, on_click=show_custom_playlist, args=(chunk[1],))
-            col3.button(":dvd: " + chunk[1]['name'], key=uuid.uuid1(), use_container_width=True, on_click=show_custom_playlist, args=(chunk[1],))
-            col3.button(":dvd: " + chunk[2]['name'], key=uuid.uuid1(), use_container_width=True, on_click=show_custom_playlist, args=(chunk[2],))
-            col3.button(":dvd: " + chunk[2]['name'], key=uuid.uuid1(), use_container_width=True, on_click=show_custom_playlist, args=(chunk[2],))
-            col4.button(":dvd: " + chunk[1]['name'], key=uuid.uuid1(), use_container_width=True, on_click=show_custom_playlist, args=(chunk[1],))
-            col4.button(":dvd: " + chunk[3]['name'], key=uuid.uuid1(), use_container_width=True, on_click=show_custom_playlist, args=(chunk[3],))
+            col2.image('./playlist.png')
+            col2.button(chunk[1]['name'], key=uuid.uuid1(), use_container_width=True, on_click=show_custom_playlist, args=(chunk[1],))
+            col2.image('./playlist.png')
+            col3.button(chunk[2]['name'], key=uuid.uuid1(), use_container_width=True, on_click=show_custom_playlist, args=(chunk[2],))
+            col2.image('./playlist.png')
+            col4.button(chunk[3]['name'], key=uuid.uuid1(), use_container_width=True, on_click=show_custom_playlist, args=(chunk[3],))
         except IndexError:
             break
 
