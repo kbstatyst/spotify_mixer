@@ -25,6 +25,7 @@ API_URL = 'https://api.spotify.com/v1'
 PLAYLISTS_URL = API_URL + '/playlists'
 FEATURES_URL = API_URL + '/audio-features'
 
+# dodanie pustych albo domyślnych wartości do stanu który jest zachowany pomiędzy kliknięciami
 if 'playlist_id' not in st.session_state:
     st.session_state['playlist_id'] = ''
 
@@ -108,6 +109,8 @@ def get_audio_features(access_token, songs_ids):
 
     return features
 
+
+# wyciągnięcie id piosenek z obiektu playlisty
 def get_ids_from_playlist(playlist):
     ids = []
     for track in playlist['tracks']['items']:
@@ -148,6 +151,7 @@ def show_audio_features_info(audio_features):
         for (name, column) in zip(row2, columns2):
             column.metric(name, mean(name))
 
+# wyświetlenie na ekranie statystyk doczyczących playlisty stworzonej przez użytkownika
 def show_audio_features_info_custom(audio_features):
     feature_names = {'taneczność': 'danceability',
                      'energiczność': 'energy',
@@ -197,8 +201,91 @@ def songs_to_dataframe(songs):
 
 st.header("Spotify mixer")
 
+# dodanie playlisty stworzonej przez użytkownika do stanu, czyli obiektu który jest zachowywany pomiedzy kliknięciami użytkownika
 def show_custom_playlist(songs):
     st.session_state['playlist_to_show'] = songs['playlist']
+
+def new_playlist():
+    """
+    Wyświeltenie strony tworzenia nowej playlisty
+    """
+    st.caption("Nowa playlista")
+
+    # utworzenie suwaków wyboru statystyk
+    dnc = st.slider('taneczność', min_value=0.0, max_value=1.0, value=(0.0, 1.0))
+    eng = st.slider('energiczność', min_value=0.0, max_value=1.0, value=(0.0, 1.0))
+    acu = st.slider('akustyczność', min_value=0.0, max_value=1.0, value=(0.0, 1.0))
+    ins = st.slider('instrumentalność', min_value=0.0, max_value=1.0, value=(0.0, 1.0))
+    liv = st.slider('żywość', min_value=0.0, max_value=1.0, value=(0.0, 1.0))
+    val = st.slider('szczęśliwość', min_value=0.0, max_value=1.0, value=(0.0, 1.0))
+
+    big_playlist_id = '2Jc0amXy2IvLyTofJKgiYg'
+
+    btn = st.button(":minidisc: Utwórz", use_container_width=True)
+
+    # zrobienie listy tupli z listy utworów i listy statystyk utworów
+    def zip_tracks_features(tracks, features):
+        zipped = zip(tracks, features)
+        track_with_features = []
+        for pair in zipped:
+            pair[0]['features'] = pair[1]
+            track_with_features.append(pair[0])
+        return track_with_features
+
+    # filtrowanie po statystykach wybranych przez użytkownika
+    def filter_features(track):
+        features = track['features']
+        conditions = [ dnc[0] <= features['danceability'] <= dnc[1],
+                       eng[0] <= features['energy'] <= eng[1],
+                       acu[0] <= features['acousticness'] <= acu[1],
+                       ins[0] <= features['instrumentalness'] <= ins[1],
+                       liv[0] <= features['liveness'] <= liv[1],
+                       val[0] <= features['valence'] <= val[1] ]
+        return all(conditions)
+
+    def filter_tracks(tracks):
+        fil = filter(filter_features, tracks)
+        return list(fil)
+
+    # wyświetlenie liczby wszystkich utworów oraz tych spełniających wybrane przez użytkownika statystyki
+    def lengths(all, filtered):
+        expander = st.expander('Liczba utworów', expanded=True)
+        with expander:
+            columns = st.columns(2)
+            columns[0].metric('Wszyskie', all)
+            columns[1].metric('Spełniające warunki', filtered)
+
+    # zapisanie playlisty
+    if btn:
+        access_token = get_access_token(CLIENT_ID, CLIENT_SECRET)
+        if access_token:
+            playlist = get_playlist(access_token, big_playlist_id)
+            if playlist:
+                songs_ids = get_ids_from_playlist(playlist)
+                audio_features = get_audio_features(access_token, songs_ids)
+                zipped = zip_tracks_features(playlist['tracks']['items'],
+                                             audio_features['audio_features'])
+                filtered = filter_tracks(zipped)
+                lengths(len(zipped), len(filtered))
+
+                songs_to_dataframe(filtered)
+
+                def save_custom_playlist():
+                    st.session_state['custom_playlists'].append({'name': st.session_state['new_name'], 'playlist': filtered[:]})
+                    st.success('Playlista zapisana')
+
+                name = st.text_input('Nazwa', value='Nowa playlista', key='new_name', on_change=save_custom_playlist)
+
+                # st.button(':arrow_down: Zapisz', on_click=save_custom_playlist, args=(st.session_state['new_name'], filtered), use_container_width=True)
+
+# wybór strony głównej
+# miejsce w którym aktualnie znajduje się użytkownik jest trzymane w st.session_state, które jest niezmienne pomiędzy kliknięciami użytkownika
+def go_to_mainpage():
+    st.session_state['page'] = 'mainpage'
+
+# wybór strony "Nowa playlista"
+def go_to_new_playlist():
+    st.session_state['page'] = 'new_playlist'
 
 def mainpage():
     """
@@ -206,10 +293,9 @@ def mainpage():
     """
     st.caption("Playlisty")
 
-    # st.markdown('<style>p::first-letter{font-size: 4rem;}</style>', unsafe_allow_html=True)
-
     col1, col2, col3, col4 = st.columns(4)
 
+    # kolumny z przyciskami z wbudowanymi playlistami
     with col1:
         pl1 = st.button(':minidisc: Piosenki do płakania', use_container_width=True)
 
@@ -233,6 +319,7 @@ def mainpage():
 
     custom_playlists = st.session_state['custom_playlists']
 
+    # wyświetlenie przycisków po 4 w rzędzie
     for i in range(0, len(custom_playlists), 4):
         chunk = custom_playlists[i:i + 4]
         col1, col2, col3, col4 = st.columns(4)
@@ -259,83 +346,9 @@ def mainpage():
         show_audio_features_info_custom(st.session_state['playlist_to_show'])
         songs_to_dataframe(st.session_state['playlist_to_show'])
 
-
-def new_playlist():
-    """
-    Wyświeltenie strony tworzenia nowej playlisty
-    """
-    st.caption("Nowa playlista")
-
-    dnc = st.slider('taneczność', min_value=0.0, max_value=1.0, value=(0.0, 1.0))
-    eng = st.slider('energiczność', min_value=0.0, max_value=1.0, value=(0.0, 1.0))
-    acu = st.slider('akustyczność', min_value=0.0, max_value=1.0, value=(0.0, 1.0))
-    ins = st.slider('instrumentalność', min_value=0.0, max_value=1.0, value=(0.0, 1.0))
-    liv = st.slider('żywość', min_value=0.0, max_value=1.0, value=(0.0, 1.0))
-    val = st.slider('szczęśliwość', min_value=0.0, max_value=1.0, value=(0.0, 1.0))
-
-    big_playlist_id = '2Jc0amXy2IvLyTofJKgiYg'
-
-    btn = st.button(":minidisc: Utwórz", use_container_width=True)
-
-    def zip_tracks_features(tracks, features):
-        zipped = zip(tracks, features)
-        track_with_features = []
-        for pair in zipped:
-            pair[0]['features'] = pair[1]
-            track_with_features.append(pair[0])
-        return track_with_features
-
-    def filter_features(track):
-        features = track['features']
-        conditions = [ dnc[0] <= features['danceability'] <= dnc[1],
-                       eng[0] <= features['energy'] <= eng[1],
-                       acu[0] <= features['acousticness'] <= acu[1],
-                       ins[0] <= features['instrumentalness'] <= ins[1],
-                       liv[0] <= features['liveness'] <= liv[1],
-                       val[0] <= features['valence'] <= val[1] ]
-        return all(conditions)
-
-    def filter_tracks(tracks):
-        fil = filter(filter_features, tracks)
-        return list(fil)
-
-    def lengths(all, filtered):
-        expander = st.expander('Liczba utworów', expanded=True)
-        with expander:
-            columns = st.columns(2)
-            columns[0].metric('Wszyskie', all)
-            columns[1].metric('Spełniające warunki', filtered)
-
-    if btn:
-        access_token = get_access_token(CLIENT_ID, CLIENT_SECRET)
-        if access_token:
-            playlist = get_playlist(access_token, big_playlist_id)
-            if playlist:
-                songs_ids = get_ids_from_playlist(playlist)
-                audio_features = get_audio_features(access_token, songs_ids)
-                zipped = zip_tracks_features(playlist['tracks']['items'],
-                                             audio_features['audio_features'])
-                filtered = filter_tracks(zipped)
-                lengths(len(zipped), len(filtered))
-
-                songs_to_dataframe(filtered)
-
-                def save_custom_playlist():
-                    st.session_state['custom_playlists'].append({'name': st.session_state['new_name'], 'playlist': filtered[:]})
-                    st.success('Playlista zapisana')
-
-                name = st.text_input('Nazwa', value='Nowa playlista', key='new_name', on_change=save_custom_playlist)
-
-                # st.button(':arrow_down: Zapisz', on_click=save_custom_playlist, args=(st.session_state['new_name'], filtered), use_container_width=True)
-
-def go_to_mainpage():
-    st.session_state['page'] = 'mainpage'
-
-def go_to_new_playlist():
-    st.session_state['page'] = 'new_playlist'
-
 if __name__ == "__main__":
 
+    # pasek boczny
     with st.sidebar:
         st.button(":house: Strona główna", use_container_width=True, on_click=go_to_mainpage)
         st.button(":heavy_plus_sign: Nowa playlista", use_container_width=True, on_click=go_to_new_playlist)
