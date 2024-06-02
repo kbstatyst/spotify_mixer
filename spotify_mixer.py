@@ -228,7 +228,7 @@ def new_playlist():
     liv = st.slider('żywość', min_value=0.0, max_value=1.0, value=(0.0, 1.0))
     val = st.slider('szczęśliwość', min_value=0.0, max_value=1.0, value=(0.0, 1.0))
 
-    big_playlist_id = '2Jc0amXy2IvLyTofJKgiYg'
+    big_playlist_id = '4Dg0J0ICj9kKTGDyFu0Cv4'
 
     btn = st.button(":minidisc: Utwórz", use_container_width=True)
 
