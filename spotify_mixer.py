@@ -15,6 +15,7 @@ import pandas
 import statistics
 import pandas as pd
 import uuid
+import matplotlib.pyplot as plt
 
 CLIENT_ID = '52b35c378f1f48e691bf39d4b004a5b3'
 CLIENT_SECRET = '31993222478349968efa385c178f78e6'
@@ -146,10 +147,14 @@ def show_audio_features_info(audio_features):
             return statistics.mean(map((lambda t: t[feature_names[name]]), audio_features['audio_features']))
 
         for (name, column) in zip(row1, columns1):
-            column.metric(name, mean(name))
+            plt.pie([mean(name), 1 - mean(name)],  colors=['b','w'], startangle=90)
+            column.pyplot(plt, use_container_width=True)
+            column.metric(name, round(mean(name), 2))
 
         for (name, column) in zip(row2, columns2):
-            column.metric(name, mean(name))
+            plt.pie([mean(name), 1 - mean(name)],  colors=['b','w'], startangle=90)
+            column.pyplot(plt, use_container_width=True)
+            column.metric(name, round(mean(name), 2))
 
 # wyświetlenie na ekranie statystyk doczyczących playlisty stworzonej przez użytkownika
 def show_audio_features_info_custom(audio_features):
@@ -174,10 +179,14 @@ def show_audio_features_info_custom(audio_features):
             return statistics.mean(map((lambda t: t['features'][feature_names[name]]), audio_features))
 
         for (name, column) in zip(row1, columns1):
-            column.metric(name, mean(name))
+            plt.pie([mean(name), 1 - mean(name)],  colors=['b','w'], startangle=90)
+            column.pyplot(plt, use_container_width=True)
+            column.metric(name, round(mean(name), 2))
 
         for (name, column) in zip(row2, columns2):
-            column.metric(name, mean(name))
+            plt.pie([mean(name), 1 - mean(name)],  colors=['b','w'], startangle=90)
+            column.pyplot(plt, use_container_width=True)
+            column.metric(name, round(mean(name), 2))
 
 def songs_to_dataframe(songs):
     """
