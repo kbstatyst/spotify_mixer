@@ -335,14 +335,18 @@ def mainpage():
         chunk = custom_playlists[i:i + 4]
         col1, col2, col3, col4 = st.columns(4)
         try:
+            args = (chunk[0],)
             col1.image('./playlist.png')
-            col1.button(chunk[0]['name'], key=uuid.uuid1(), use_container_width=True, on_click=show_custom_playlist, args=(chunk[0],))
+            col1.button(chunk[0]['name'], key=uuid.uuid1(), use_container_width=True, on_click=show_custom_playlist, args=args)
+            args = (chunk[1],)
             col2.image('./playlist.png')
-            col2.button(chunk[1]['name'], key=uuid.uuid1(), use_container_width=True, on_click=show_custom_playlist, args=(chunk[1],))
+            col2.button(chunk[1]['name'], key=uuid.uuid1(), use_container_width=True, on_click=show_custom_playlist, args=args)
+            args = (chunk[2],)
             col3.image('./playlist.png')
-            col3.button(chunk[2]['name'], key=uuid.uuid1(), use_container_width=True, on_click=show_custom_playlist, args=(chunk[2],))
+            col3.button(chunk[2]['name'], key=uuid.uuid1(), use_container_width=True, on_click=show_custom_playlist, args=args)
+            args = (chunk[3],)
             col4.image('./playlist.png')
-            col4.button(chunk[3]['name'], key=uuid.uuid1(), use_container_width=True, on_click=show_custom_playlist, args=(chunk[3],))
+            col4.button(chunk[3]['name'], key=uuid.uuid1(), use_container_width=True, on_click=show_custom_playlist, args=args)
         except IndexError:
             break
 
