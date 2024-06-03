@@ -147,12 +147,12 @@ def show_audio_features_info(audio_features):
             return statistics.mean(map((lambda t: t[feature_names[name]]), audio_features['audio_features']))
 
         for (name, column) in zip(row1, columns1):
-            plt.pie([mean(name), 1 - mean(name)],  colors=['b','w'], startangle=90)
+            plt.pie([mean(name), 1 - mean(name)],  colors=['indianred','whitesmoke'], startangle=90)
             column.pyplot(plt, use_container_width=True)
             column.metric(name, round(mean(name), 2))
 
         for (name, column) in zip(row2, columns2):
-            plt.pie([mean(name), 1 - mean(name)],  colors=['b','w'], startangle=90)
+            plt.pie([mean(name), 1 - mean(name)],  colors=['indianred','whitesmoke'], startangle=90)
             column.pyplot(plt, use_container_width=True)
             column.metric(name, round(mean(name), 2))
 
@@ -230,7 +230,7 @@ def new_playlist():
 
     big_playlist_id = '4Dg0J0ICj9kKTGDyFu0Cv4'
 
-    btn = st.button(":minidisc: Utwórz", use_container_width=True)
+    btn = st.button(":minidisc:   Utwórz", use_container_width=True)
 
     # zrobienie listy tupli z listy utworów i listy statystyk utworów
     def zip_tracks_features(tracks, features):
@@ -305,11 +305,11 @@ def mainpage():
     # kolumny z przyciskami z wbudowanymi playlistami
     with col1:
         col1.image('./playlist.png')
-        pl1 = st.button('Piosenki do płakania', use_container_width=True)
+        pl1 = st.button('Do płakania', use_container_width=True)
 
     with col2:
         col2.image('./playlist.png')
-        pl2 = st.button("Piosenki do tańczenia", use_container_width=True)
+        pl2 = st.button("Do tańczenia", use_container_width=True)
 
     with col3:
         col3.image('./playlist.png')
@@ -369,8 +369,8 @@ if __name__ == "__main__":
 
     # pasek boczny
     with st.sidebar:
-        st.button(":house: Strona główna", use_container_width=True, on_click=go_to_mainpage)
-        st.button(":heavy_plus_sign: Nowa playlista", use_container_width=True, on_click=go_to_new_playlist)
+        st.button(":house:   Strona główna", use_container_width=True, on_click=go_to_mainpage)
+        st.button(":heavy_plus_sign:   Nowa playlista", use_container_width=True, on_click=go_to_new_playlist)
 
     if st.session_state.page == 'mainpage':
         mainpage()
